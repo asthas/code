@@ -17,6 +17,7 @@ void insertNode ();
 void placeNode  (NODE* tmp);
 void travelTree (NODE* trv);
 void printNode  (NODE* tmp);
+void checkCases (NODE* tmp);
 
 NODE* root = NULL;
 
@@ -30,7 +31,7 @@ void insertNode () {
 	tmp->right  = NULL; 
 	tmp->parent = NULL;
 
-	tmp->color  = BLACK; 
+	tmp->color  = RED; 
 	
 	if (!root) {
 		root = tmp;
@@ -47,6 +48,7 @@ void placeNode (NODE* tmp) {
 			if (!trv->right) {
 				tmp->parent = trv;
 				trv->right = tmp;
+				checkCases(tmp);
 				return;
 			}
 			trv = trv->right;
@@ -54,12 +56,39 @@ void placeNode (NODE* tmp) {
 			if (!trv->left) {
 				tmp->parent = trv;
 				trv->left  = tmp;
+				checkCases(tmp);
 				return;
 			}
 			trv = trv->left;
 		}
 	}
 
+}
+
+void checkCases(NODE* tmp) {
+	NODE* grandparent;
+	NODE* uncle;
+	NODE* father;
+
+	father = tmp->parent;
+	if (father == NULL) 
+		return;
+
+	grandparent = father->parent;
+	if (grandparent == NULL)
+		return;
+	
+	uncle = (grandparent->right == father) ? grandparent->left : grandparent-> right;
+	if (uncle == NULL)
+		return;
+
+	if (uncle->color == RED) {
+		printf("\n\nCase 1\n\n");
+	} else if (tmp == father->right) {
+		printf("\n\nCase 2\n\n");
+	} else {
+		printf("\n\nCase 3\n\n");
+	}
 }
 
 void travelTree (NODE* trv) {
